@@ -16,7 +16,7 @@ public class TilesDictionary : MonoBehaviour
 
     private Dictionary<TileType, TileBase> _tilesDictionary = new Dictionary<TileType, TileBase>();
 
-    void Start()
+    public void GenerateDictionary()
     {
         _tilesDictionary.Add(TileType.Desert, _desertTile);
         _tilesDictionary.Add(TileType.Brick, _brickTile);
@@ -29,14 +29,11 @@ public class TilesDictionary : MonoBehaviour
 
     public TileBase GetTileBase(TileType tileType)
     {
-        Debug.Log(tileType);
 
         if (_tilesDictionary.ContainsKey(tileType))
         {
             return _tilesDictionary[tileType];
         }
-        
-        Debug.LogError("LPM");
         return _desertTile;
     }
 }

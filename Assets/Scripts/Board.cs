@@ -24,6 +24,7 @@ public class Board : MonoBehaviour
     {
         SetMaxResourcesTilesValues();
         _landTilemap.ClearAllTiles();
+        _tilesDictionary.GenerateDictionary();
         SetTilemap();
     }
 
@@ -64,13 +65,17 @@ public class Board : MonoBehaviour
             if (!_typeCount.ContainsKey(tileType))
             {
                 _typeCount.Add(tileType, 1);
-                tryingToSet = false;
+                break;
             }
 
-            if (_typeCount[tileType] == _maxValues[tileType])
+            if (_typeCount[tileType] >= _maxValues[tileType])
             {
                 count++;
-                if (count == 100) tryingToSet = false;
+                if (count == 100)
+                {
+                    tryingToSet = false;
+                    Debug.LogError("Error in board tiling ");
+                }
                 continue;
             }
 
