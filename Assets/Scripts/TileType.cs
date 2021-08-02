@@ -12,7 +12,7 @@ public enum TileType
     Water,
     Harbor,
     BrickHarbor,
-    CoalHarbor,
+    OreHarbor,
     GrainHarbor,
     WoodHarbor,
     WoolHarbor

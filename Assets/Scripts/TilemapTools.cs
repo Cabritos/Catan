@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TilemapStuff : MonoBehaviour
+public class TilemapTools : MonoBehaviour
 {
     [SerializeField] Dictionary<int, BoardTile> _boardTiles = new Dictionary<int, BoardTile>();
 
     [SerializeField] private Tilemap _waterTileMap = null;
     [SerializeField] private Tilemap _landTileMap = null;
-    [SerializeField] private GameObject _boardTilePrefab;
+    [SerializeField] private GameObject _boardTilePrefab = null;
 
     private GridLayout _gridLayout;
 
@@ -19,34 +20,22 @@ public class TilemapStuff : MonoBehaviour
 
         //TileBase[] allTiles = _waterTileMap.GetTilesBlock(_waterTileMap.cellBounds);
 
-
+        //SetTiles(_waterTileMap);
     }
 
-    /*
-    private void SetTiles(bool isLand, Tilemap tileMap)
+    
+    private void SetTiles(Tilemap tileMap)
     {
         foreach (Vector3Int pos in _waterTileMap.cellBounds.allPositionsWithin)
         {
             if (!tileMap.HasTile(pos)) continue;
 
             var localPlace = new Vector3Int(pos.x, pos.y, pos.z);
-            Debug.Log(localPlace);
 
-            var boardTileGameObject = Instantiate(_boardTilePrefab);
-            var boardTile = boardTileGameObject.GetComponent<BoardTile>();
-
-            boardTile.SetValues(
-                tileMap.GetTile(localPlace),
-                localPlace,
-                _gridLayout.CellToWorld(localPlace),
-                _boardTiles.Count,
-                tileMap.GetTile(pos),
-                isLand);
-
-            _boardTiles.Add(_boardTiles.Count, boardTile);
+            var tile = Instantiate(_boardTilePrefab);
+            //tile.GetComponent<BoardTile>().SetPosition(localPlace, _gridLayout.CellToWorld(localPlace));
         }
     }
-    */
 
     void Update()
     {

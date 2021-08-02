@@ -7,37 +7,60 @@ using UnityEngine.Tilemaps;
 public class Board : MonoBehaviour
 {
     [SerializeField] private BoardLayout _boardLayout = null;
-    [SerializeField] private Tilemap _landTilemap = null;
-    [SerializeField] private BoardTile[] _boardTiles = null;
-    
+    [SerializeField] private Tilemap _tilemap = null;
+
     private Dictionary<TileType, int> _maxValues = new Dictionary<TileType, int>();
     private Dictionary<TileType, int> _typeCount = new Dictionary<TileType, int>();
 
     private TilesDictionary _tilesDictionary;
+    private GridLayout _gridLayout;
 
     void Awake()
     {
         _tilesDictionary = GetComponent<TilesDictionary>();
+        _gridLayout = _tilemap.layoutGrid;
     }
 
     void Start()
     {
         SetMaxResourcesTilesValues();
-        _landTilemap.ClearAllTiles();
+        _tilemap.ClearAllTiles();
         _tilesDictionary.GenerateDictionary();
         SetTilemap();
     }
 
     private void SetTilemap()
     {
-        foreach (var boardTile in _boardTiles)
+        BoardTile[] boardTiles = GetComponentsInChildren<BoardTile>();
+        int count = 0;
+
+        foreach (var boardTile in boardTiles)
         {
-            if (!boardTile.IsLand) continue;
+            boardTile.SetGridPosition(count, _gridLayout.WorldToCell(boardTile.transform.position));
+            boardTile.SetWorldPosition(_gridLayout.CellToWorld(boardTile.GridPosition));
+            count++;
 
-            boardTile.SetTileType(AddLandTile());
+            if (boardTile.IsLand)
+            {
+                AddTile(boardTile, SetLandTile());
+                continue;
+            }
 
-            var baseTile = _tilesDictionary.GetTileBase(boardTile.TileType);
-            _landTilemap.SetTile(boardTile.Position, baseTile);
+            boardTile.SetHarbor();
+
+            if (boardTile.IsResourceHarbor)
+            {
+                AddTile(boardTile, SetHarborTile());
+                continue;
+            }
+
+            if (boardTile.IsHarbor)
+            {
+                AddTile(boardTile, TileType.Harbor);
+                continue;
+            }
+
+            AddTile(boardTile, TileType.Water);
         }
     }
 
@@ -45,15 +68,22 @@ public class Board : MonoBehaviour
     {
         _maxValues.Add(TileType.Desert, _boardLayout.GetValues().desert);
         _maxValues.Add(TileType.Brick, _boardLayout.GetValues().brick);
-        _maxValues.Add(TileType.Ore, _boardLayout.GetValues().ore);
         _maxValues.Add(TileType.Grain, _boardLayout.GetValues().grain);
+        _maxValues.Add(TileType.Ore, _boardLayout.GetValues().ore);
         _maxValues.Add(TileType.Wood, _boardLayout.GetValues().wood);
         _maxValues.Add(TileType.Wool, _boardLayout.GetValues().wool);
     }
 
-    public TileType AddLandTile()
+    private void AddTile(BoardTile boardTile, TileType tileType)
     {
-        TileType tileType = TileType.Desert;
+        boardTile.SetTileType(tileType);
+        var baseTile = _tilesDictionary.GetTileBase(boardTile.TileType);
+        _tilemap.SetTile(boardTile.GridPosition, baseTile);
+    }
+
+    private TileType SetLandTile()
+    {
+        TileType tileType = TileType.Water;
         var tryingToSet = true;
 
         var count = 0;
@@ -74,13 +104,47 @@ public class Board : MonoBehaviour
                 if (count == 100)
                 {
                     tryingToSet = false;
-                    Debug.LogError("Error in board tiling ");
+                    Debug.LogError("Error in land tiling ");
                 }
                 continue;
             }
 
             _typeCount[tileType]++;
             tryingToSet = false;
+        }
+
+        return tileType;
+    }
+
+    private TileType SetHarborTile()
+    {
+        TileType tileType = TileType.Water;
+
+        int count = 0;
+        while (true)
+        {
+            tileType = (TileType)UnityEngine.Random.Range(7, 13);
+            Debug.Log(tileType);
+
+            if (!_typeCount.ContainsKey(tileType))
+            {
+                _typeCount.Add(tileType, 1);
+                Debug.Log("Added");
+                break;
+            }
+
+            Debug.Log("Retry");
+            count++;
+            if (count == 100)
+            {
+                Debug.LogError("Error in harbor tiling ");
+                foreach (var i in _typeCount)
+                {
+                    Debug.Log(i);
+                }
+
+                break;
+            }
         }
 
         return tileType;
