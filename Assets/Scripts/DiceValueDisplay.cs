@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class DiceValue : MonoBehaviour
+public class DiceValueDisplay : MonoBehaviour
 {
     [SerializeField] private Color32 _highlightColor = new Color32();
 

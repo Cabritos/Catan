@@ -9,7 +9,9 @@ public class Board : MonoBehaviour
 {
     [SerializeField] private BoardLayout _boardLayout = null;
     [SerializeField] private Tilemap _tilemap = null;
-    [SerializeField] private GameObject _diceValuePrefab = null;
+    [SerializeField] private GameObject _diceValueDisplayPrefab = null;
+    [SerializeField] private GameObject _harborDisplayPrefab = null;
+    [SerializeField] private GameObject _resourceHarborDisplayPrefab = null;
 
     private BoardTile[] _boardTiles;
     private Dictionary<TileType, int> _maxValues = new Dictionary<TileType, int>();
@@ -33,7 +35,6 @@ public class Board : MonoBehaviour
         TogglePositionId();
 
         SetMaxResourcesTilesValues();
-        _tilemap.ClearAllTiles();
         _tilesDictionary.GenerateDictionary();
         _diceValues = _boardLayout.GetDiceValues;
         SetTilemap();
@@ -53,18 +54,17 @@ public class Board : MonoBehaviour
             {
                 AddTile(boardTile, SetLandTile());
 
-                if (boardTile.TileType != TileType.Desert)
-                {
-                    GameObject diceValueDisplay = Instantiate(
-                        _diceValuePrefab,
-                        boardTile.gameObject.transform,
-                        false);
+                if (boardTile.TileType == TileType.Desert) continue;
 
-                    diceValueDisplay.GetComponent<DiceValue>().SetValue(_diceValues[_landTiles]);
-                    boardTile.SetDiceValue(_diceValues[_landTiles]);
-                    _landTiles++;
-                }
-                
+                GameObject display = Instantiate(
+                    _diceValueDisplayPrefab, 
+                    boardTile.gameObject.transform,
+                    false);
+
+                display.GetComponent<DiceValueDisplay>().SetValue(_diceValues[_landTiles]); 
+                boardTile.SetDiceValue(_diceValues[_landTiles]);
+                _landTiles++;
+
                 continue;
             }
 
@@ -72,12 +72,23 @@ public class Board : MonoBehaviour
 
             if (boardTile.IsResourceHarbor)
             {
+                var display = Instantiate(
+                    _resourceHarborDisplayPrefab,
+                    boardTile.gameObject.transform,
+                    false);
+
                 AddTile(boardTile, SetHarborTile());
+                display.GetComponent<ResourceHarborDisplay>().SetSprite(boardTile.TileType);
+
                 continue;
             }
 
             if (boardTile.IsHarbor)
             {
+                Instantiate(
+                    _harborDisplayPrefab,
+                    boardTile.gameObject.transform,
+                    false);
                 AddTile(boardTile, TileType.Harbor);
                 continue;
             }
