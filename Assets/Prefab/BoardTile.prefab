@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3665406527557633387}
   - component: {fileID: 3665406527557633384}
+  - component: {fileID: 3492701838080627124}
   m_Layer: 0
   m_Name: BoardTile
   m_TagString: Untagged
@@ -26,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3665406527557633385}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children:
   - {fileID: 3665406528172360273}
   m_Father: {fileID: 0}
@@ -53,6 +54,38 @@ MonoBehaviour:
   _isHarbor: 0
   _isResourceHarbor: 0
   _idText: {fileID: 3665406528684862905}
+  _slotPrefab: {fileID: 8533882980221573347, guid: 01ce0223befb28446b9734a83bdfb746, type: 3}
+--- !u!60 &3492701838080627124
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3665406527557633385}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0, y: 0.32}
+      - {x: -0.5, y: 0.16}
+      - {x: -0.5, y: -0.16}
+      - {x: 0, y: -0.32}
+      - {x: 0.5, y: -0.16}
+      - {x: 0.5, y: 0.16}
 --- !u!1 &3665406528172360278
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +122,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 1}
+  m_SizeDelta: {x: 0.5, y: 0.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &3665406528172360274
 Canvas:
@@ -226,11 +259,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.85
-  m_fontSizeBase: 36
+  m_fontSize: 0.4
+  m_fontSizeBase: 0.4
   m_fontWeight: 400
-  m_enableAutoSizing: 1
-  m_fontSizeMin: 0.5
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 0.1
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2

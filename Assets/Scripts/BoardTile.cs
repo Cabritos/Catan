@@ -29,19 +29,8 @@ public class BoardTile : MonoBehaviour
         _tileType = tileType;
         _idText.text = _positionId.ToString();
     }
-
-
-    public void SetPositionId(int positionId)
-    {
-        _positionId = positionId;
-    }
-
-    public void SetWorldsPosition(Vector3 worldPosition)
-    {
-        transform.position = worldPosition - new Vector3(0,0,1);
-    }
-
-    public void SetGridPosition(int positionId, Vector3Int gridPosition)
+    
+    public void SetGridPositionAndId(int positionId, Vector3Int gridPosition)
     {
         _gridPosition = gridPosition;
         _positionId = positionId;

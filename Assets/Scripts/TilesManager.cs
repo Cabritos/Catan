@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Board : MonoBehaviour
+public class TilesManager : MonoBehaviour
 {
     [SerializeField] private BoardLayout _boardLayout = null;
     [SerializeField] private Tilemap _tilemap = null;
@@ -38,6 +38,7 @@ public class Board : MonoBehaviour
         _tilesDictionary.GenerateDictionary();
         _diceValues = _boardLayout.GetDiceValues;
         SetTilemap();
+        GetComponent<SettlementsManager>().SetSettlementSpots();
     }
 
     private void SetTilemap()
@@ -46,7 +47,7 @@ public class Board : MonoBehaviour
 
         foreach (var boardTile in _boardTiles)
         {
-            boardTile.SetGridPosition(count, _gridLayout.WorldToCell(boardTile.transform.position));
+            boardTile.SetGridPositionAndId(count, _gridLayout.WorldToCell(boardTile.transform.position));
             boardTile.SetWorldPosition(_gridLayout.CellToWorld(boardTile.GridPosition));
             count++;
 
@@ -90,6 +91,7 @@ public class Board : MonoBehaviour
                     boardTile.gameObject.transform,
                     false);
                 AddTile(boardTile, TileType.Harbor);
+
                 continue;
             }
 
