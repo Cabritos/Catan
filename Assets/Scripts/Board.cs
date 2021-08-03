@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,33 +9,41 @@ public class Board : MonoBehaviour
 {
     [SerializeField] private BoardLayout _boardLayout = null;
     [SerializeField] private Tilemap _tilemap = null;
+    [SerializeField] private GameObject _diceValuePrefab = null;
 
+    private BoardTile[] _boardTiles;
     private Dictionary<TileType, int> _maxValues = new Dictionary<TileType, int>();
     private Dictionary<TileType, int> _typeCount = new Dictionary<TileType, int>();
+
+    private int[] _diceValues;
+    private int _landTiles;
 
     private TilesDictionary _tilesDictionary;
     private GridLayout _gridLayout;
 
     void Awake()
     {
+        _boardTiles = GetComponentsInChildren<BoardTile>();
         _tilesDictionary = GetComponent<TilesDictionary>();
         _gridLayout = _tilemap.layoutGrid;
     }
 
     void Start()
     {
+        TogglePositionId();
+
         SetMaxResourcesTilesValues();
         _tilemap.ClearAllTiles();
         _tilesDictionary.GenerateDictionary();
+        _diceValues = _boardLayout.GetDiceValues;
         SetTilemap();
     }
 
     private void SetTilemap()
     {
-        BoardTile[] boardTiles = GetComponentsInChildren<BoardTile>();
         int count = 0;
 
-        foreach (var boardTile in boardTiles)
+        foreach (var boardTile in _boardTiles)
         {
             boardTile.SetGridPosition(count, _gridLayout.WorldToCell(boardTile.transform.position));
             boardTile.SetWorldPosition(_gridLayout.CellToWorld(boardTile.GridPosition));
@@ -43,6 +52,19 @@ public class Board : MonoBehaviour
             if (boardTile.IsLand)
             {
                 AddTile(boardTile, SetLandTile());
+
+                if (boardTile.TileType != TileType.Desert)
+                {
+                    GameObject diceValueDisplay = Instantiate(
+                        _diceValuePrefab,
+                        boardTile.gameObject.transform,
+                        false);
+
+                    diceValueDisplay.GetComponent<DiceValue>().SetValue(_diceValues[_landTiles]);
+                    boardTile.SetDiceValue(_diceValues[_landTiles]);
+                    _landTiles++;
+                }
+                
                 continue;
             }
 
@@ -123,30 +145,30 @@ public class Board : MonoBehaviour
         int count = 0;
         while (true)
         {
-            tileType = (TileType)UnityEngine.Random.Range(7, 13);
-            Debug.Log(tileType);
+            tileType = (TileType)UnityEngine.Random.Range(8, 13);
 
             if (!_typeCount.ContainsKey(tileType))
             {
                 _typeCount.Add(tileType, 1);
-                Debug.Log("Added");
                 break;
             }
 
-            Debug.Log("Retry");
             count++;
             if (count == 100)
             {
                 Debug.LogError("Error in harbor tiling ");
-                foreach (var i in _typeCount)
-                {
-                    Debug.Log(i);
-                }
-
                 break;
             }
         }
 
         return tileType;
+    }
+
+    public void TogglePositionId()
+    {
+        foreach (var boardTile in _boardTiles)
+        {
+            boardTile.GetComponentInChildren<TMP_Text>().enabled = !boardTile.GetComponentInChildren<TMP_Text>().enabled;
+        }
     }
 }

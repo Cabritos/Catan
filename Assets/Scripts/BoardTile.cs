@@ -59,13 +59,13 @@ public class BoardTile : MonoBehaviour
 
     public void SetHarbor()
     {
-        if (_positionId % 4 == 0)
+        if ((_positionId - 1) % 4 == 0)
         {
             _isResourceHarbor = true;
             return;
         }
 
-        if (_positionId % 2 == 0)
+        if ((_positionId - 1) % 2 == 0)
             _isHarbor = true;
     }
 }
