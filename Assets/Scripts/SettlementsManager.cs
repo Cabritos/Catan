@@ -24,11 +24,7 @@ public class SettlementsManager : MonoBehaviour
 
         foreach (var boardTile in _boardTiles)
         {
-            if (!boardTile.IsLand)
-            {
-                Destroy(boardTile.GetComponent<PolygonCollider2D>());
-                continue;
-            }
+            if (!boardTile.IsLand) continue;
 
             foreach (var vector2 in boardTile.GetComponent<PolygonCollider2D>().points)
             {

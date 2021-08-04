@@ -39,6 +39,7 @@ public class TilesManager : MonoBehaviour
         _diceValues = _boardLayout.GetDiceValues;
         SetTilemap();
         GetComponent<SettlementsManager>().SetSettlementSpots();
+        GetComponent<RoadManager>().SetRoadSpots();
     }
 
     private void SetTilemap()
